@@ -1,0 +1,7 @@
+{
+  "name": "Copy of HeritageGuide",
+  "description": "AI-Driven Heritage & Tourism Discovery Platform for Karnataka",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
