@@ -2,8 +2,27 @@ import os
 import sys
 
 import traceback
-from flask import Flask, request, jsonify
+import json
+from datetime import datetime
+from werkzeug.utils import secure_filename
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+import database
+
+# ... imports ...
+
+app = Flask(__name__)
+CORS(app)
+
+# Setup Uploads Folder
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Initialize DB
+db = database.init_db()
+
+# --- Load Models on Startup ---
 
 # Import local modules
 # (Assuming they are in the same directory, which is 'backend')
@@ -21,8 +40,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import damage_detection
 import recommendation_engine
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+# --- Load Models on Startup ---
 
 # --- Load Models on Startup ---
 
@@ -55,6 +73,55 @@ def debug_model():
     return jsonify(damage_detection.get_model_status())
 
 
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/api/reports', methods=['POST'])
+def save_report():
+    try:
+        if 'image' not in request.files:
+            return jsonify({'error': 'No image provided'}), 400
+            
+        file = request.files['image']
+        data = request.form
+        
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+
+        # Save Image
+        filename = secure_filename(f"{datetime.now().timestamp()}_{file.filename}")
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        
+        # Construct Document
+        report = {
+            "place_name": data.get('place_name', 'Unknown'),
+            "district": data.get('district', 'Unknown'),
+            "description": data.get('description', ''),
+            "damage_type": data.get('damage_type', 'Unknown'),
+            "confidence": float(data.get('confidence', 0.0)),
+            "image_path": f"/uploads/{filename}",
+            "timestamp": datetime.now()
+        }
+        
+        # Save to JSON DB
+        saved_report = database.save_report(report)
+        return jsonify({'message': 'Report saved successfully!', 'report': saved_report})
+
+    except Exception as e:
+        print(f"Save Error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/reports', methods=['GET'])
+def get_reports():
+    try:
+        reports = database.get_all_reports()
+        return jsonify(reports)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/analyze_sentiment', methods=['POST'])
 def analyze_sentiment():

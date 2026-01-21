@@ -1,9 +1,16 @@
+import os
 import requests
-import sys
 
 # Configuration for the microservice
-# REPLACE THIS WITH YOUR NGROK URL (e.g., "https://1234-56-78.ngrok-free.app")
-SERVICE_URL = "https://592dabaaba6e.ngrok-free.app" 
+# Read from colab_url.txt file for easy updating
+try:
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'colab_url.txt')
+    with open(config_path, 'r') as f:
+        SERVICE_URL = f.read().strip().rstrip('/')
+except Exception:
+    SERVICE_URL = "http://localhost:5001" # Fallback setup
+
+print(f"🔗 Damage Service Configured at: {SERVICE_URL}") 
 # SERVICE_URL = "https://YOUR-NGROK-URL.ngrok-free.app"
 
 def load_damage_model():
@@ -11,7 +18,9 @@ def load_damage_model():
     Checks if the microservice is running.
     """
     try:
-        response = requests.get(f"{SERVICE_URL}/status", timeout=2)
+        # Ngrok free tier requires a special header to skip the warning page
+        headers = {"ngrok-skip-browser-warning": "true"}
+        response = requests.get(f"{SERVICE_URL}/status", headers=headers, timeout=2)
         if response.status_code == 200:
             data = response.json()
             if data.get('model_loaded'):
@@ -43,7 +52,9 @@ def predict_damage(image_file):
         # image_file is likely a Werkzeug FileStorage object from Flask
         files = {'image': (image_file.filename, image_file.read(), image_file.content_type)}
         
-        response = requests.post(f"{SERVICE_URL}/predict", files=files)
+        # Ngrok free tier requires a special header to skip the warning page
+        headers = {"ngrok-skip-browser-warning": "true"}
+        response = requests.post(f"{SERVICE_URL}/predict", files=files, headers=headers)
         
         if response.status_code == 200:
             return response.json()
@@ -57,7 +68,8 @@ def predict_damage(image_file):
 
 def get_model_status():
     try:
-        response = requests.get(f"{SERVICE_URL}/status", timeout=1)
+        headers = {"ngrok-skip-browser-warning": "true"}
+        response = requests.get(f"{SERVICE_URL}/status", headers=headers, timeout=1)
         if response.status_code == 200:
             return response.json()
         else:

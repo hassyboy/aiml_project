@@ -4,7 +4,7 @@ import { Place } from '../types';
 import { X, MapPin, Shield, Sun, Navigation, Heart, Wrench } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { PLACEHOLDER_IMAGE } from '../constants';
-import ReviewAnalyzer from './ReviewAnalyzer';
+
 
 
 interface PlaceDetailModalProps {
@@ -147,11 +147,6 @@ const PlaceDetailModal: React.FC<PlaceDetailModalProps> = ({ place, onClose, use
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-              </div>
-
-              {/* Review Analyzer Section */}
-              <div className="pt-2">
-                <ReviewAnalyzer />
               </div>
 
               <div className="flex gap-3 pt-4">

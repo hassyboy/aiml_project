@@ -1,0 +1,22 @@
+[
+    {
+        "place_name": "rock temple ",
+        "district": "Bagalkot",
+        "description": "the very old temples ",
+        "damage_type": "Erosion",
+        "confidence": 0.9995038509368896,
+        "image_path": "/uploads/1769017197.700098_B_Erosin_391.jpg",
+        "timestamp": "2026-01-21T23:09:57.703654",
+        "_id": "270cbca6-ecd2-460e-b124-450f8a210855"
+    },
+    {
+        "place_name": "hampi",
+        "district": "Gadag",
+        "description": "",
+        "damage_type": "Cracking",
+        "confidence": 0.9928964972496033,
+        "image_path": "/uploads/1769022910.223479_hampi.jpg",
+        "timestamp": "2026-01-22T00:45:10.259873",
+        "_id": "e0a56924-8af9-48bc-ac2a-921706b9098d"
+    }
+]
