@@ -18,6 +18,7 @@ from flask_cors import CORS
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
+import damage_detection
 import recommendation_engine
 
 app = Flask(__name__)
@@ -25,7 +26,33 @@ CORS(app)  # Enable CORS for all routes
 
 # --- Load Models on Startup ---
 
+# Check connection to damage service (non-blocking, just log status)
+damage_detection.load_damage_model()
 recommendation_engine.load_recommendation_models()
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image file provided'}), 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    # Forward to the microservice via the proxy module
+    result = damage_detection.predict_damage(file)
+    
+    if 'error' in result:
+         # Propagate the error code from the service if possible, defaulting to 500
+        return jsonify(result), 500
+    
+    return jsonify(result)
+
+@app.route('/debug-model', methods=['GET'])
+def debug_model():
+    # Check status of the microservice
+    return jsonify(damage_detection.get_model_status())
 
 
 

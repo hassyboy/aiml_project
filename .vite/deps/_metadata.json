@@ -1,0 +1,58 @@
+{
+  "hash": "a8beef55",
+  "configHash": "b598710c",
+  "lockfileHash": "ec1c83b4",
+  "browserHash": "47485da7",
+  "optimized": {
+    "leaflet": {
+      "src": "../../node_modules/leaflet/dist/leaflet-src.js",
+      "file": "leaflet.js",
+      "fileHash": "cb671a8e",
+      "needsInterop": true
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "e6a79163",
+      "needsInterop": false
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "725c7df2",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "f3ae10ef",
+      "needsInterop": true
+    },
+    "react-leaflet": {
+      "src": "../../node_modules/react-leaflet/lib/index.js",
+      "file": "react-leaflet.js",
+      "fileHash": "9fc4e4de",
+      "needsInterop": false
+    },
+    "recharts": {
+      "src": "../../node_modules/recharts/es6/index.js",
+      "file": "recharts.js",
+      "fileHash": "55dc7054",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-G6WF6XAT": {
+      "file": "chunk-G6WF6XAT.js"
+    },
+    "chunk-YKHBUGD6": {
+      "file": "chunk-YKHBUGD6.js"
+    },
+    "chunk-XPUPTK5G": {
+      "file": "chunk-XPUPTK5G.js"
+    },
+    "chunk-DC5AMYBS": {
+      "file": "chunk-DC5AMYBS.js"
+    }
+  }
+}

@@ -7,6 +7,7 @@ import FilterPanel from './components/FilterPanel.tsx';
 import PlaceCard from './components/PlaceCard.tsx';
 import PlaceDetailModal from './components/PlaceDetailModal.tsx';
 import Footer from './components/Footer.tsx';
+import DamageAnalyzer from './components/DamageAnalyzer.tsx';
 
 import { Place, FilterState, AIRecommendation } from './types.ts';
 import { getAIRecommendations } from './services/geminiService.ts';
@@ -296,7 +297,7 @@ const App: React.FC = () => {
                 availableDistricts={availableDistricts}
               />
 
-
+              <DamageAnalyzer />
             </div>
           </div>
 
