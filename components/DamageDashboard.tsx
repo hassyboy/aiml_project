@@ -17,6 +17,7 @@ const DamageDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [reports, setReports] = useState<DamageReport[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const API_URL = "http://localhost:5000/api/reports";
     const BASE_URL = "http://localhost:5000"; // For images
@@ -32,6 +33,26 @@ const DamageDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             setError(err.message);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDelete = async (reportId: string, placeName: string) => {
+        if (!confirm(`Delete report for "${placeName}"? This cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            setDeletingId(reportId);
+            const res = await fetch(`${API_URL}/${reportId}`, {
+                method: 'DELETE'
+            });
+            if (!res.ok) throw new Error("Failed to delete report");
+            // Remove from local state
+            setReports(prev => prev.filter(r => r._id !== reportId));
+        } catch (err: any) {
+            setError("Delete failed: " + err.message);
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -126,6 +147,20 @@ const DamageDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                         <p className="text-sm text-stone-600 line-clamp-3 mb-4 flex-1 italic">
                                             "{report.description || 'No description provided.'}"
                                         </p>
+
+                                        {/* Delete Button */}
+                                        <button
+                                            onClick={() => handleDelete(report._id, report.place_name)}
+                                            disabled={deletingId === report._id}
+                                            className="mt-auto w-full py-2 text-sm font-medium text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {deletingId === report._id ? (
+                                                <Loader2 size={14} className="animate-spin" />
+                                            ) : (
+                                                <Trash2 size={14} />
+                                            )}
+                                            {deletingId === report._id ? 'Deleting...' : 'Delete Report'}
+                                        </button>
                                     </div>
                                 </div>
                             ))}

@@ -52,3 +52,25 @@ def get_all_reports():
     except Exception as e:
         print(f"JSON DB Read Error: {e}")
         return []
+
+def delete_report(report_id):
+    """Delete a report by its _id"""
+    try:
+        with open(REPORTS_FILE, 'r') as f:
+            reports = json.load(f)
+        
+        # Find and remove the report
+        original_count = len(reports)
+        reports = [r for r in reports if r.get('_id') != report_id]
+        
+        if len(reports) == original_count:
+            return False  # Report not found
+        
+        # Save back
+        with open(REPORTS_FILE, 'w') as f:
+            json.dump(reports, f, indent=4)
+        
+        return True
+    except Exception as e:
+        print(f"JSON DB Delete Error: {e}")
+        raise e

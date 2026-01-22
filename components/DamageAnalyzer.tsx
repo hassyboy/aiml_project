@@ -34,8 +34,8 @@ const DamageAnalyzer: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Pointing to the Main Backend (which proxies to Microservice)
-    const MICROSERVICE_URL = 'http://localhost:5000/predict';
-    const REPORT_URL = 'http://localhost:5000/api/reports';
+    const MICROSERVICE_URL = 'http://127.0.0.1:5000/predict';
+    const REPORT_URL = 'http://127.0.0.1:5000/api/reports';
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];

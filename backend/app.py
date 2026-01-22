@@ -123,6 +123,18 @@ def get_reports():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/reports/<report_id>', methods=['DELETE'])
+def delete_report(report_id):
+    try:
+        deleted = database.delete_report(report_id)
+        if deleted:
+            return jsonify({'message': 'Report deleted successfully'})
+        else:
+            return jsonify({'error': 'Report not found'}), 404
+    except Exception as e:
+        print(f"Delete Error: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/analyze_sentiment', methods=['POST'])
 def analyze_sentiment():
     return jsonify({'error': 'NLP model disabled for debugging'}), 503
